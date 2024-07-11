@@ -1,4 +1,8 @@
 {
+  "patient_feedback_data_phase_1":{
+    "file_name":"patient_feedback_data_phase_1.json"
+  },
+
   "alpaca":{
     "hf_hub_url":"tatsu-lab/alpaca",
     "columns":{

@@ -1,4 +1,7 @@
 {
+  "NRC-Smart Reply Dataset":{
+    "file_name":"NRC-Smart Reply Dataset.json"
+  },
   "patient_feedback_data_phase_1":{
     "file_name":"patient_feedback_data_phase_1.json"
   },

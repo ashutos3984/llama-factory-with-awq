@@ -21,3 +21,7 @@ overwrite_output_dir: true
 ### eval
 per_device_eval_batch_size: 1
 predict_with_generate: true
+
+### logging
+report_to: wandb
+run_name: test_run  # optional

@@ -24,4 +24,4 @@ predict_with_generate: true
 
 ### logging
 report_to: wandb
-run_name: test_run  # optional
+run_name: test_run  

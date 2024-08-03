@@ -30,9 +30,129 @@ if TYPE_CHECKING:
 
 
 
+import json
+import os
+import tempfile
+
+import json
+import os
+import tempfile
+
+import os
+import tempfile
+import json
+
+import os
+import tempfile
+import json
+
+import os
+import tempfile
+import json
+
+import os
+import json
+
+import os
+import json
+
+import os
+import json
+
+# def upload_dataset(file_path):
+#     try:
+#         # Check if the provided file_path exists
+#         if not os.path.exists(file_path):
+#             return f"File not found: {file_path}"
+        
+#         # Read the JSON content from the file path
+#         with open(file_path, 'r', encoding='utf-8') as f:
+#             json_content = f.read()
+
+#         # Attempt to parse the JSON content
+#         try:
+#             json_data = json.loads(json_content)
+#         except json.JSONDecodeError as jde:
+#             print(f"Invalid JSON content: {json_content}")
+#             return "The uploaded file is not a valid JSON."
+
+#         # Define the directory to save the dataset
+#         data_dir = 'data/'
+#         os.makedirs(data_dir, exist_ok=True)
+
+#         # Save the parsed JSON content in the data directory
+#         full_file_name = os.path.basename(file_path)
+#         final_file_path = os.path.join(data_dir, full_file_name)
+#         with open(final_file_path, 'w', encoding='utf-8') as f:
+#             json.dump(json_data, f, indent=4)
+
+#         return f"Successfully uploaded: {full_file_name}"
+
+#     except Exception as e:
+#         return f"An error occurred: {str(e)}"
+
+def upload_dataset(file_path):
+    try:
+        # Check if the provided file_path exists
+        if not os.path.exists(file_path):
+            return f"File not found: {file_path}"
+        
+        # Read the JSON content from the file path
+        with open(file_path, 'r', encoding='utf-8') as f:
+            json_content = f.read()
+
+        # Attempt to parse the JSON content
+        try:
+            json_data = json.loads(json_content)
+        except json.JSONDecodeError as jde:
+            print(f"Invalid JSON content: {json_content}")
+            return "The uploaded file is not a valid JSON."
+
+        # Define the directory to save the dataset
+        data_dir = 'data/'
+        os.makedirs(data_dir, exist_ok=True)
+
+        # Save the parsed JSON content in the data directory
+        full_file_name = os.path.basename(file_path)
+        final_file_path = os.path.join(data_dir, full_file_name)
+        with open(final_file_path, 'w', encoding='utf-8') as f:
+            json.dump(json_data, f, indent=4)
+
+        # Update dataset_info.json
+        dataset_info_path = os.path.join(data_dir, 'dataset_info.json')
+        if os.path.exists(dataset_info_path):
+            with open(dataset_info_path, 'r', encoding='utf-8') as f:
+                dataset_info = json.load(f)
+        else:
+            dataset_info = {}
+
+        # Add the new dataset info in the specified format
+        base_name = os.path.splitext(full_file_name)[0]  # Get the base name without extension
+        dataset_info[base_name] = {
+            "file_name": full_file_name  # Store the full file name for internal use
+        }
+
+        with open(dataset_info_path, 'w', encoding='utf-8') as f:
+            json.dump(dataset_info, f, indent=4)
+
+        return f"Successfully uploaded: {full_file_name}"
+
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
+
+
+
 
 def create_top() -> Dict[str, "Component"]:
     available_models = list(SUPPORTED_MODELS.keys()) + ["Custom"]
+
+
+    with gr.Row():
+        # Add the file upload component
+        dataset_upload = gr.File(label="Upload JSON Dataset")
+        upload_output = gr.Textbox(label="Upload Status", interactive=False)  # Add a textbox for output
+
 
     with gr.Row():
         lang = gr.Dropdown(choices=["en", "ru", "zh"], scale=1)
@@ -67,6 +187,7 @@ def create_top() -> Dict[str, "Component"]:
     )
     checkpoint_path.focus(list_checkpoints, [model_name, finetuning_type], [checkpoint_path], queue=False)
     quantization_method.change(can_quantize_to, [quantization_method], [quantization_bit], queue=False)
+    dataset_upload.upload(upload_dataset, inputs=dataset_upload, outputs=upload_output)
 
     return dict(
         lang=lang,
@@ -81,6 +202,8 @@ def create_top() -> Dict[str, "Component"]:
         rope_scaling=rope_scaling,
         booster=booster,
         visual_inputs=visual_inputs,
+        dataset_upload=dataset_upload,
+        upload_output=upload_output,
     )
 
 def update_quantization_bits(quantization_method):

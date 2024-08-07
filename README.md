@@ -20,7 +20,7 @@ test-env\Scripts\activate
 pip install "path_to_your_wheel_file"
 
 # Clone the Updated llama-factory Repository
-git clone https://github.com/ashutos3984/llama-factory-with-awq.git
+git clone https://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@github.com/ashutos3984/llama-factory-with-awq.git
 cd llama-factory-with-awq
 
 # Install Dependencies
